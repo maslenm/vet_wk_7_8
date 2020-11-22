@@ -51,10 +51,25 @@ class Animals extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    /* 
     public function show(Owner $owner, Animal $animal)
     {
         return new AnimalResource($animal);
     }
+ */
+
+    public function show(Owner $owner, Animal $animal)
+    {
+        $this->checkAccess($owner, $animal);
+        return new AnimalResource($animal);
+    }
+
+    private function checkAccess(Owner $owner, Animal $animal)
+    {
+        if ($owner->id !== $animal->owner_id){
+                abort(403, 'This animal does not belong to this owner.');
+    }
+}
 
     /**
      * Update the specified resource in storage.
